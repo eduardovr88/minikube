@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apihelados-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apihelados
+  template:
+    metadata:
+      labels:
+        app: apihelados
+  spec:
+  containers:
+  - name: apihelados
+    image: eduardovr88/apihelados:latest
+    env:
+      - name: DATABASE_URL
+        value: postgres://postgres:postgres@postgres-service:5432/postgres
+    ports:
+    - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apihelados-service
+spec:
+  selector:
+    app: apihelados
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
